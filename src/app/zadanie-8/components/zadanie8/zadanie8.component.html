@@ -1,0 +1,141 @@
+
+
+<div class="app">
+
+  <!-- ===== Панель инструментов ===== -->
+  <header class="toolbar">
+    <input 
+      class="toolbar__search" 
+      type="text" 
+      placeholder="Поиск..." 
+      [(ngModel)]="search" 
+      (input)="filterOnLitteral(search)"
+    >
+
+    <button class="btn btn--add" (click)="modalOpen()"
+    >Add</button>
+    <!-- <button class="btn btn--close" (click)="modalClose()">Close</button> -->
+
+    <div class="toolbar__auth">
+      <button 
+        *ngIf="this.isCreaterUser == '' || this.isCreaterUser == 'unknownUser'" 
+        class="btn btn--login" 
+        (click)="logWindow()"
+      >Log In</button>
+
+      <button 
+        *ngIf="this.isCreaterUser !== 'unknownUser' && isCreaterUser" 
+        class="btn btn--logout" 
+        (click)="logOutUser()"
+      >Log Out</button>
+    </div>
+  </header>
+
+      <!-- ===== Выпадающий список пользователей при поиске ===== -->
+  <div class="user-dog-box" *ngIf="isSearchByUser">
+    <div *ngFor="let user of userInfo">
+      <span class="user-dog-box__item"
+      (click)="sortOnUser(user.nameUser)"
+      >{{user.nameUser}}</span>
+    </div>
+  </div>
+
+  <!-- ===== Блок сортировки ===== -->
+  <section class="sort">
+    <button 
+      *ngIf="!isSortOpen" 
+      class="btn btn--sort" 
+      (click)="sortOpen()"
+    >Sort</button>
+
+    <button 
+      *ngIf="isSortOpen" 
+      class="btn btn--reset" 
+      (click)="sortOnDataReset()"
+    >Reset sort</button>
+
+    <ul class="sort__list" *ngIf="isSortOpen">
+      <li class="sort__item">
+        <button class="btn btn--old" (click)="sortOnDataNew()">First old</button>
+      </li>
+      <li class="sort__item">
+        <button class="btn btn--new" (click)="sortOnDataOld()">First new</button>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ===== Список задач ===== -->
+  <main class="todo-list">
+    <article class="todo" *ngFor="let todo of dataTodo">
+
+      <!-- Лайк справа, по центру вертикали -->
+      <div class="likes">
+        <button 
+          class="likes__btn"
+          (click)="likeByUser(todo.id)"
+          (mouseenter)="onHoverLike(todo.id)"
+          (mouseleave)="leaveHoverLike()"
+        >
+          <span class="likes__count">{{ todo.likeUsers.length }}</span>
+          <span class="likes__icon">♥</span>
+        </button>
+
+        <div 
+          class="likes__users" 
+          *ngIf="isHoverLike === todo.id && todo.likeUsers.length > 0"
+        >
+          <span 
+            class="likes__user" 
+            *ngFor="let userLike of todo.likeUsers"
+          >
+            {{ userLike }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Первая строка -->
+      <div class="todo__row">
+        <a [routerLink]="['/user', todo.isCreater]" ><span class="todo__creator">{{ todo.isCreater }}</span></a>
+        <span class="todo__date">{{ todo.dateAndTime | date: 'short' }}</span>
+        <h3 class="todo__title">{{ todo.title }}</h3>
+      </div>
+
+      <!-- Вторая строка -->
+      <p class="todo__content">{{ todo.content }}</p>
+
+      <!-- Кнопки действий -->
+      <footer 
+        class="todo__actions"
+        *ngIf="todo.isCreater === isCreaterUser || isAdmin === true"
+      >
+        <button class="btn btn--delete" (click)="deleteTodo(todo.id)">Del</button>
+        <button class="btn btn--edit" (click)="edit(todo)">Edit</button>
+
+        <app-modal-zadanie8
+        *ngIf="todo.id === currentEditId"
+        [todo]="todo"
+        (save)="add($event)"
+        (close)="modalClose()">
+        </app-modal-zadanie8>
+
+      </footer>
+    </article>
+  </main>
+
+<!-- ===== Модалка добавления / редактирования ===== -->
+<app-modal-zadanie8
+  *ngIf="isOpenModal === true"
+  (save)="add($event)"
+  (close)="modalClose()"
+></app-modal-zadanie8>
+
+
+<!-- ===== Модалка логина ===== -->
+<app-modal-log-zadanie8
+  *ngIf="logWindowOpen === true"
+  (close)="logWindow()"
+  (userLogOut)="logModalClose()"
+  (userIn)="logInUser($event)"
+></app-modal-log-zadanie8>
+
+</div>

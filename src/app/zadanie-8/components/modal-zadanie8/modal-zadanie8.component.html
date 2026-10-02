@@ -1,0 +1,30 @@
+<div class="modal-overlay">
+  <div class="add-form">
+
+    <h3 class="add-form__title">Новая задача</h3>
+
+    <div class="add-form__field">
+      <input 
+        class="add-form__input"
+        type="text" 
+        placeholder="Заголовок" 
+        [(ngModel)]="title"
+      >
+    </div>
+
+    <div class="add-form__field">
+      <input 
+        class="add-form__input"
+        type="text" 
+        placeholder="Описание" 
+        [(ngModel)]="content"
+      >
+    </div>
+
+    <div class="add-form__actions">
+      <button class="btn btn--save" (click)="add()">Сохранить</button>
+      <button class="btn btn--close" (click)="closeWindow()">Закрыть</button>
+    </div>
+
+  </div>
+</div>

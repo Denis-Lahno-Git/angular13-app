@@ -1,0 +1,37 @@
+<div class="modal-overlay">
+  <div class="login-form">
+
+    <h3 class="login-form__title">Вход</h3>
+
+    <div class="login-form__field">
+      <input 
+        class="login-form__input"
+        type="text" 
+        placeholder="Логин"
+        [(ngModel)]="login"
+      >
+    </div>
+
+    <div class="login-form__field">
+      <input 
+        class="login-form__input"
+        type="password" 
+        placeholder="Пароль"
+        [(ngModel)]="password"
+      >
+    </div>
+
+    <div class="login-form__actions">
+      <button class="btn btn--ok" (click)="loginInit()">OK</button>
+      <button class="btn btn--close" (click)="closeForm()">Close</button>
+    </div>
+
+  </div>
+</div>
+<!-- юзер создать 3 шт ++++++++++++++++
+поиск и фильтр ключевое слово +++++++++++++++ но с небольшой помощью ИИ
+сортировка по дате++++++++++
+если @ то выпадет список всех юзеров которые делали и фильтр по нему, блочить ++++
+каждому юзеру создать страницу (фото, описание, тудушки его), удаленный пост исчезает из списка и из страницы
+Добавить возможность лайков и ховер на них+++++++
+ -->

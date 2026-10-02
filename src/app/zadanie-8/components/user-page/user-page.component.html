@@ -1,0 +1,154 @@
+<!-- Блок профиля пользователя -->
+<section class="user-profile-list">
+  <div *ngFor="let user of allUsersInfo" class="user-profile-card">
+
+    <div class="user-profile-card__header">
+      <img
+        [src]="'assets/photo/' + user.image"
+        alt="Фото пользователя"
+        class="user-avatar"
+      />
+      <h3 class="user-name">{{ user.nameUser }}</h3>
+    </div>
+
+    <div class="user-profile-card__fields">
+      <!-- Город -->
+      <div class="form-group">
+        <label class="form-label">Город</label>
+        <p class="form-value" *ngIf="!isEdit">{{ user.city || '—' }}</p>
+        <input
+          type="text"
+          [(ngModel)]="user.city"
+          *ngIf="isEdit"
+          class="form-input"
+          placeholder="Укажите город"
+        />
+      </div>
+
+      <!-- Дата рождения -->
+      <div class="form-group">
+        <label class="form-label">Дата рождения</label>
+        <p class="form-value" *ngIf="!isEdit">{{ user.birthday || '—' }}</p>
+        <input
+          type="text"
+          [(ngModel)]="user.birthday"
+          *ngIf="isEdit"
+          class="form-input"
+          placeholder="ДД.ММ.ГГГГ"
+        />
+      </div>
+
+      <!-- О себе -->
+      <div class="form-group">
+        <label class="form-label">О себе</label>
+        <p class="form-value" *ngIf="!isEdit">{{ user.oSebe || '—' }}</p>
+        <input
+          type="text"
+          [(ngModel)]="user.oSebe"
+          *ngIf="isEdit"
+          class="form-input"
+          placeholder="Расскажите о себе"
+        />
+      </div>
+    </div>
+
+    <!-- Кнопки -->
+    <footer class="user-profile-card__actions">
+      
+      <button 
+        (click)="modalOpen()" 
+        class="btn btn--add"
+        *ngIf="isCreaterUser == user.nameUser && isCreaterUser !== 'unknownUser'"
+      >Add new ToDo</button>
+
+      <button
+        type="button"
+        class="btn btn--edit"
+        (click)="editInfoUser()"
+        *ngIf="isCreaterUser == user.nameUser && isCreaterUser !== 'unknownUser' || isAdmin == true"
+      >
+        Edit
+      </button>
+      <button
+        type="button"
+        class="btn btn--save"
+        (click)="saveInfoUser()"
+        *ngIf="isEdit"
+      >
+        Ok
+      </button>
+    </footer>
+  </div>
+</section>
+
+<!-- Назад -->
+<div class="back-nav">
+  <a [routerLink]="['']">
+    <button type="button" class="btn btn--back">← Назад</button>
+  </a>
+
+</div>
+
+<!-- Список задач -->
+<main class="todo-list">
+  <article class="todo" *ngFor="let todo of dataTodo">
+
+    <div class="likes">
+      <button
+        class="likes__btn"
+        (click)="likeByUser(todo.id)"
+        (mouseenter)="onHoverLike(todo.id)"
+        (mouseleave)="leaveHoverLike()"
+        aria-label="Поставить лайк"
+      >
+        <span class="likes__count">{{ todo.likeUsers.length }}</span>
+        <span class="likes__icon">♥</span>
+      </button>
+
+      <div
+        class="likes__users"
+        *ngIf="isHoverLike === todo.id && todo.likeUsers.length > 0"
+      >
+        <span
+          class="likes__user"
+          *ngFor="let userLike of todo.likeUsers"
+        >
+          {{ userLike }}
+        </span>
+      </div>
+    </div>
+
+    <div class="todo__row">
+      <a [routerLink]="['/user', todo.isCreater]" class="todo__creator-link">
+        <span class="todo__creator">{{ todo.isCreater }}</span>
+      </a>
+      <span class="todo__date">{{ todo.dateAndTime | date:'short' }}</span>
+      <h3 class="todo__title">{{ todo.title }}</h3>
+    </div>
+
+    <p class="todo__content">{{ todo.content }}</p>
+
+    <footer
+      class="todo__actions"
+      *ngIf="todo.isCreater === isCreaterUser || isAdmin == true"
+    >
+      <button class="btn btn--delete" (click)="deleteTodo(todo.id)">Del</button>
+      <button class="btn btn--edit" (click)="edit(todo)">Edit</button>
+
+      <app-modal-zadanie8
+        *ngIf="todo.id === currentEditId"
+        [todo]="todo"
+        (save)="add($event)"
+        (close)="modalClose()"
+      ></app-modal-zadanie8>
+
+    </footer>
+  </article>
+</main>
+
+<!-- Модалка добавления / редактирования -->
+<app-modal-zadanie8
+  *ngIf="isOpenModal === true"
+  (save)="add($event)"
+  (close)="modalClose()"
+></app-modal-zadanie8>
